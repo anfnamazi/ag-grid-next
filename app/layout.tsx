@@ -3,8 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "همراه‌پنل | داشبورد مدیریت",
-    template: "%s | همراه‌پنل",
+    default: "حامیران پنل | داشبورد مدیریت",
+    template: "%s | حامیران پنل",
   },
   description: "پنل مدیریت فارسی، راست‌چین و واکنش‌گرا با Next.js و HeroUI",
 };

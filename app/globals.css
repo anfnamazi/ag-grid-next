@@ -52,12 +52,13 @@ button svg { width: 20px; height: 20px; }
 .nav-link > span:nth-of-type(1) { flex: 1; }
 .nav-count { display: grid; min-width: 22px; height: 20px; place-items: center; border-radius: 6px; background: var(--default); padding: 0 5px; color: var(--muted); font-size: 9px; }
 .nav-link.active .nav-count { background: color-mix(in srgb, #7c3aed 17%, transparent); color: inherit; }
-.nav-chevron { width: 13px !important; transform: rotate(180deg); }
+.nav-chevron { width: 13px !important; }
 .empty-search { padding: 28px 10px; color: var(--muted); font-size: 12px; text-align: center; }
 
 .sidebar-upgrade { position: relative; overflow: hidden; margin: 0 3px 15px; border: 1px solid color-mix(in srgb, #7c3aed 18%, var(--separator)); border-radius: 13px; background: linear-gradient(140deg, color-mix(in srgb, #7c3aed 8%, var(--surface)), var(--surface)); padding: 13px; }
 .sidebar-upgrade::after { position: absolute; top: -35px; left: -35px; width: 90px; height: 90px; border-radius: 50%; background: rgb(124 58 237 / .08); content: ""; }
 .sidebar-upgrade .spark { display: grid; width: 27px; height: 27px; place-items: center; margin-bottom: 7px; border-radius: 8px; background: rgb(124 58 237 / .13); color: #7c3aed; }
+.sidebar-upgrade .spark svg { width: 14px; height: 14px; }
 .sidebar-upgrade strong { display: block; font-size: 11px; }
 .sidebar-upgrade p { margin: 5px 0 10px; color: var(--muted); font-size: 9px; line-height: 1.7; }
 .sidebar-upgrade .button { height: 31px; font-size: 10px; }
@@ -71,7 +72,7 @@ button svg { width: 20px; height: 20px; }
 .main-frame { min-height: 100vh; padding-right: var(--sidebar-width); }
 .topbar { position: sticky; z-index: 30; top: 0; display: flex; height: 72px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--separator); background: color-mix(in srgb, var(--surface) 91%, transparent); padding: 0 30px; backdrop-filter: blur(14px); }
 .topbar-title { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
-.topbar-title svg { width: 13px; transform: rotate(180deg); }
+.topbar-title svg { width: 13px; }
 .topbar-title strong { color: var(--foreground); font-weight: 700; }
 .header-actions { display: flex; align-items: center; gap: 5px; }
 .header-icon-button { position: relative; color: var(--muted) !important; }
@@ -86,7 +87,7 @@ button svg { width: 20px; height: 20px; }
 .profile-button > span { display: flex; flex-direction: column; gap: 2px; min-width: 92px; }
 .profile-button strong { font-size: 10px; }
 .profile-button small { color: var(--muted); font-size: 8px; }
-.profile-button > svg { width: 14px; transform: rotate(90deg); color: var(--muted); }
+.profile-button > svg { width: 14px; transform: rotate(-90deg); color: var(--muted); }
 .mobile-brand { display: none; align-items: center; gap: 10px; }
 .mobile-brand .brand-copy { display: none; }
 .mobile-brand .brand-mark { width: 33px; height: 33px; }
@@ -95,6 +96,8 @@ button svg { width: 20px; height: 20px; }
 .welcome-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
 .welcome-row p { margin: 0 0 7px; color: var(--muted); font-size: 10px; }
 .welcome-row h1 { margin: 0 0 7px; font-size: clamp(20px, 2vw, 25px); font-weight: 800; letter-spacing: -.8px; }
+.welcome-row h1 { display: flex; align-items: center; gap: 7px; }
+.welcome-wave { width: 22px; height: 22px; color: #f59e0b; transform: rotate(-12deg); }
 .welcome-row span { color: var(--muted); font-size: 11px; }
 .welcome-row .button { box-shadow: 0 8px 22px rgb(124 58 237 / .2); font-size: 11px; }
 .welcome-row .button svg { width: 16px; }
@@ -125,7 +128,7 @@ button svg { width: 20px; height: 20px; }
 .panel-heading p { margin: 0; color: var(--muted); font-size: 9px; }
 .panel-heading select { height: 31px; border: 1px solid var(--separator); border-radius: 8px; outline: 0; background: var(--field-background); padding: 0 10px 0 25px; color: var(--foreground); font-size: 9px; }
 .text-link { display: flex; align-items: center; gap: 5px; border: 0; background: transparent; color: #7c3aed; font-size: 9px; white-space: nowrap; }
-.text-link svg { width: 13px; transform: rotate(180deg); }
+.text-link svg { width: 13px; }
 .chart-summary { display: flex; align-items: center; gap: 12px; margin-top: 21px; }
 .chart-summary strong { font-size: 16px; }
 .chart-summary span { display: flex; align-items: center; gap: 3px; border-radius: 6px; background: rgb(5 150 105 / .1); padding: 4px 7px; color: #059669; font-size: 8px; font-weight: 700; }
@@ -211,6 +214,7 @@ button svg { width: 20px; height: 20px; }
 .dark .status-checked { background: #263244; color: #cbd5e1; border-color: #475569; }
 .operation-buttons { display: flex; height: 100%; align-items: center; justify-content: center; gap: 4px; }
 .operation-buttons button { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid var(--separator); border-radius: 7px; background: var(--surface); color: #7c3aed; font-size: 15px; transition: .15s ease; }
+.operation-buttons button svg { width: 14px; height: 14px; }
 .operation-buttons button:hover { border-color: #7c3aed; background: color-mix(in srgb, #7c3aed 9%, var(--surface)); transform: translateY(-1px); }
 .operation-buttons .delete-action { color: #dc2626; }
 .operation-buttons .delete-action:hover { border-color: #dc2626; background: color-mix(in srgb, #dc2626 8%, var(--surface)); }

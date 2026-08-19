@@ -10,8 +10,8 @@ import {
   type ValueGetterParams,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { Clock3, History, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { PlusIcon, SearchIcon } from "../components/icons";
 import { reportRows, type ReportRow, type ReportStatus } from "./reports-data";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -57,10 +57,10 @@ function OperationRenderer({ data }: ICellRendererParams<ReportRow>) {
   if (!data) return null;
   const action = (label: string) => window.alert(`${label} درخواست شماره ${data.requestNumber}`);
   return <div className="operation-buttons">
-    <button type="button" title="نمایش سوابق ویرایش" aria-label={`نمایش سوابق درخواست ${data.requestNumber}`} onClick={() => action("نمایش سوابق")}>↶</button>
-    <button type="button" title="ویرایش" aria-label={`ویرایش درخواست ${data.requestNumber}`} onClick={() => action("ویرایش")}>✎</button>
-    <button type="button" title="تاریخچه تغییر وضعیت" aria-label={`تاریخچه وضعیت درخواست ${data.requestNumber}`} onClick={() => action("تاریخچه وضعیت")}>◷</button>
-    <button type="button" className="delete-action" title="حذف" aria-label={`حذف درخواست ${data.requestNumber}`} onClick={() => action("حذف")}>⌫</button>
+    <button type="button" title="نمایش سوابق ویرایش" aria-label={`نمایش سوابق درخواست ${data.requestNumber}`} onClick={() => action("نمایش سوابق")}><History/></button>
+    <button type="button" title="ویرایش" aria-label={`ویرایش درخواست ${data.requestNumber}`} onClick={() => action("ویرایش")}><Pencil/></button>
+    <button type="button" title="تاریخچه تغییر وضعیت" aria-label={`تاریخچه وضعیت درخواست ${data.requestNumber}`} onClick={() => action("تاریخچه وضعیت")}><Clock3/></button>
+    <button type="button" className="delete-action" title="حذف" aria-label={`حذف درخواست ${data.requestNumber}`} onClick={() => action("حذف")}><Trash2/></button>
   </div>;
 }
 
@@ -103,11 +103,11 @@ export function ReportsTable() {
   return <>
     <div className="reports-heading">
       <div><p>مدیریت محتوا</p><h1>گزارش درخواست‌های محتوا</h1><span>فهرست درخواست‌ها را جستجو، فیلتر و مرتب‌سازی کنید.</span></div>
-      <Button variant="primary"><PlusIcon/> درخواست جدید</Button>
+      <Button variant="primary"><Plus/> درخواست جدید</Button>
     </div>
     <section className="reports-panel">
       <div className="reports-toolbar">
-        <div className="reports-search"><SearchIcon/><Input aria-label="جستجو در تمام گزارش‌ها" fullWidth placeholder="جستجو در تمام ستون‌ها..." value={quickFilter} onChange={(event) => setQuickFilter(event.target.value)} variant="secondary"/></div>
+        <div className="reports-search"><Search/><Input aria-label="جستجو در تمام گزارش‌ها" fullWidth placeholder="جستجو در تمام ستون‌ها..." value={quickFilter} onChange={(event) => setQuickFilter(event.target.value)} variant="secondary"/></div>
         <div className="reports-count"><strong>{reportRows.length.toLocaleString("fa-IR")}</strong><span>درخواست ثبت‌شده</span></div>
       </div>
       <div className="reports-grid" dir="rtl">
