@@ -61,13 +61,13 @@ const stats = [
 ];
 
 const projects = [
-  { name: "طراحی وب‌سایت نوین", client: "شرکت آبان", progress: 78, due: "۲۸ مرداد", color: "#7c3aed", initials: "آن" },
+  { name: "طراحی وب‌سایت نوین", client: "شرکت آبان", progress: 78, due: "۲۸ مرداد", color: "#f8b900", initials: "آن" },
   { name: "اپلیکیشن همراه‌بانک", client: "بانک پارسیان", progress: 52, due: "۱۰ شهریور", color: "#2563eb", initials: "پا" },
   { name: "بازطراحی هویت بصری", client: "استودیو دید", progress: 91, due: "۳ شهریور", color: "#059669", initials: "دی" },
 ];
 
 const activities = [
-  { name: "سارا احمدی", action: "یک وظیفه را تکمیل کرد", target: "طراحی صفحه ورود", time: "۱۲ دقیقه پیش", color: "#7c3aed", initials: "سا" },
+  { name: "سارا احمدی", action: "یک وظیفه را تکمیل کرد", target: "طراحی صفحه ورود", time: "۱۲ دقیقه پیش", color: "#f8b900", initials: "سا" },
   { name: "امیر رضایی", action: "فایلی به پروژه افزود", target: "راهنمای برند.pdf", time: "۴۵ دقیقه پیش", color: "#2563eb", initials: "ار" },
   { name: "مهسا کریمی", action: "نظر جدیدی ثبت کرد", target: "نسخه نهایی داشبورد", time: "۲ ساعت پیش", color: "#db2777", initials: "مک" },
 ];
@@ -140,7 +140,7 @@ function RevenueChart() {
     <div className="panel-heading"><div><h2>روند درآمد</h2><p>نمایش درآمد ۶ ماه گذشته</p></div><select aria-label="بازه زمانی"><option>۶ ماه اخیر</option><option>۳ ماه اخیر</option><option>امسال</option></select></div>
     <div className="chart-summary"><strong>۱٫۲ میلیارد تومان</strong><span><TrendingUp/> ۱۸٫۲٪ رشد</span></div>
     <div className="chart-wrap"><div className="y-axis"><span>۳۰۰</span><span>۲۲۵</span><span>۱۵۰</span><span>۷۵</span><span>۰</span></div><div className="chart-canvas"><div className="grid-lines"><i/><i/><i/><i/><i/></div>
-      <svg viewBox="0 0 700 210" preserveAspectRatio="none" role="img" aria-label="نمودار روند صعودی درآمد در شش ماه گذشته"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7c3aed" stopOpacity=".28"/><stop offset="1" stopColor="#7c3aed" stopOpacity="0"/></linearGradient></defs><path className="chart-area" d="M0 182 C55 169 83 144 140 153 S225 125 280 132 S356 91 420 102 S503 64 560 72 S640 32 700 40 L700 210 L0 210 Z"/><path className="chart-line" d="M0 182 C55 169 83 144 140 153 S225 125 280 132 S356 91 420 102 S503 64 560 72 S640 32 700 40"/><g className="chart-points"><circle cx="0" cy="182" r="4"/><circle cx="140" cy="153" r="4"/><circle cx="280" cy="132" r="4"/><circle cx="420" cy="102" r="4"/><circle cx="560" cy="72" r="4"/><circle cx="700" cy="40" r="4"/></g></svg>
+      <svg viewBox="0 0 700 210" preserveAspectRatio="none" role="img" aria-label="نمودار روند صعودی درآمد در شش ماه گذشته"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f8b900" stopOpacity=".28"/><stop offset="1" stopColor="#f8b900" stopOpacity="0"/></linearGradient></defs><path className="chart-area" d="M0 182 C55 169 83 144 140 153 S225 125 280 132 S356 91 420 102 S503 64 560 72 S640 32 700 40 L700 210 L0 210 Z"/><path className="chart-line" d="M0 182 C55 169 83 144 140 153 S225 125 280 132 S356 91 420 102 S503 64 560 72 S640 32 700 40"/><g className="chart-points"><circle cx="0" cy="182" r="4"/><circle cx="140" cy="153" r="4"/><circle cx="280" cy="132" r="4"/><circle cx="420" cy="102" r="4"/><circle cx="560" cy="72" r="4"/><circle cx="700" cy="40" r="4"/></g></svg>
       <div className="x-axis"><span>اسفند</span><span>فروردین</span><span>اردیبهشت</span><span>خرداد</span><span>تیر</span><span>مرداد</span></div></div></div>
   </section>;
 }
