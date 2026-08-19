@@ -195,6 +195,31 @@ button svg { width: 20px; height: 20px; }
 .reports-grid .ag-header-cell-label { justify-content: center; font-size: 10px; font-weight: 800; }
 .reports-grid .ag-cell { display: flex; align-items: center; justify-content: center; border-left-color: var(--separator); }
 .reports-grid .ag-floating-filter-body input { text-align: center; }
+.status-filter-select { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 7px; color: var(--foreground); font: 9px Tahoma, Arial, sans-serif; text-align: center; }
+.status-filter-select:focus { border-color: #7c3aed; box-shadow: 0 0 0 2px rgb(124 58 237 / .12); }
+.persian-date-range-filter { position: relative; display: grid; width: 100%; grid-template-columns: 1fr 1fr; align-items: center; gap: 4px; padding-left: 22px; }
+.range-date-field, .range-date-field .rmdp-container { width: 100%; min-width: 0; }
+.persian-date-filter-input { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 5px; color: var(--foreground); font: 9px Tahoma, Arial, sans-serif; text-align: center; cursor: pointer; }
+.persian-date-filter-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 2px rgb(124 58 237 / .12); }
+.persian-date-range-filter > button { position: absolute; z-index: 2; left: 0; display: grid; width: 20px; height: 22px; place-items: center; border: 0; border-radius: 5px; background: transparent; color: var(--muted); }
+.persian-date-range-filter > button:hover { background: var(--default); color: #dc2626; }
+.persian-date-range-filter > button svg { width: 12px; height: 12px; }
+.persian-popup-date-input { position: relative; display: flex; width: 100%; min-width: 205px; align-items: center; }
+.persian-popup-date-input .rmdp-container { width: 100%; }
+.persian-popup-date-input > button { position: absolute; z-index: 2; left: 4px; display: grid; width: 22px; height: 22px; place-items: center; border: 0; border-radius: 5px; background: transparent; color: var(--muted); }
+.persian-popup-date-input > button:hover { background: var(--default); color: #dc2626; }
+.persian-popup-date-input > button svg { width: 12px; height: 12px; }
+.reports-grid .ag-filter-body-wrapper .persian-date-filter-input { height: 34px; font-size: 10px; }
+.persian-filter-calendar { --rmdp-primary-purple: #7c3aed; --rmdp-secondary-purple: #6d28d9; font-family: Tahoma, Arial, sans-serif !important; }
+.persian-filter-calendar.rmdp-wrapper { border-color: var(--separator); background: var(--surface); color: var(--foreground); box-shadow: 0 14px 40px rgb(15 23 42 / .2); }
+.persian-filter-calendar .rmdp-calendar { background: var(--surface); }
+.persian-filter-calendar .rmdp-header-values, .persian-filter-calendar .rmdp-day { color: var(--foreground); }
+.persian-filter-calendar .rmdp-week-day { color: #7c3aed; }
+.persian-filter-calendar .rmdp-day.rmdp-selected span:not(.highlight), .persian-filter-calendar .rmdp-day.rmdp-today span { background: #7c3aed; color: #fff; }
+.persian-filter-calendar .rmdp-day:not(.rmdp-disabled):not(.rmdp-day-hidden) span:hover { background: #8b5cf6; color: #fff; }
+.persian-filter-calendar .rmdp-arrow { border-color: #7c3aed; }
+.persian-filter-calendar .rmdp-arrow-container:hover { background: color-mix(in srgb, #7c3aed 12%, var(--surface)); box-shadow: none; }
+.dark .persian-filter-calendar .rmdp-day.rmdp-deactive { color: #697386; }
 .reports-grid .ag-paging-panel { min-height: 55px; border-top: 1px solid var(--separator); color: var(--muted); font-size: 10px; }
 .reports-grid .ag-paging-page-size { margin-inline-start: 0; }
 .reports-grid .ag-cell-focus { outline-color: #7c3aed !important; }
