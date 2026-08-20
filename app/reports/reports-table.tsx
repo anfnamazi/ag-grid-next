@@ -607,8 +607,8 @@ export function ReportsTable() {
             getRowId={(params) => String(params.data.id)}
             localeText={localeText}
             pagination
-            paginationPageSize={2}
-            paginationPageSizeSelector={[2, 5, 10]}
+            paginationPageSize={5}
+            paginationPageSizeSelector={[5, 10, 50]}
             quickFilterText={quickFilter}
             rowData={reportRows}
             rowHeight={54}

@@ -2,6 +2,47 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+    font-family: yekan;
+    src: url("/fonts/yekan.woff") format('woff');
+    font-weight: normal;
+}
+@font-face {
+    font-family: yekanf;
+    src: url("/fonts/yekanf.woff") format('woff');
+    font-weight: normal;
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:200;
+    src: url('/fonts/IRANSansWeb200.woff') format('woff');
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:300;
+    src: url('/fonts/IRANSansWeb300.woff') format('woff');
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:400;
+    src: url('/fonts/IRANSansWeb400.woff') format('woff');
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:500;
+    src: url('/fonts/IRANSansWeb500.woff') format('woff');
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:600;
+    src: url('/fonts/IRANSansWeb600.woff') format('woff');
+}
+@font-face{
+    font-family: 'IranSans';
+    font-weight:900;
+    src: url('/fonts/IRANSansWeb900.woff') format('woff');
+}
+
 :root {
   --accent: #f8b900; --accent-foreground: #2b2100; --background: #f4f7fb; --foreground: #172033;
   --surface: #fff; --surface-foreground: #172033; --overlay: #fff; --muted: #727a8b; --default: #f1f3f8;
@@ -16,7 +57,7 @@
 
 * { box-sizing: border-box; }
 html { min-width: 320px; background: var(--background); }
-body { margin: 0; min-height: 100vh; background: var(--background); color: var(--foreground); font-family: Tahoma, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0; min-height: 100vh; background: var(--background); color: var(--foreground); font-family: yekanf, Tahoma, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 button svg { width: 20px; height: 20px; }
@@ -189,7 +230,7 @@ button svg { width: 20px; height: 20px; }
 .reports-search .input { height: 40px; padding-right: 40px; border-radius: 10px; background: var(--field-background); font-size: 11px; }
 .reports-count { display: flex; align-items: center; gap: 7px; border-radius: 9px; background: color-mix(in srgb, #f8b900 10%, var(--surface)); padding: 8px 11px; color: var(--muted); font-size: 9px; }
 .reports-count strong { color: #9a7300; font-size: 13px; }
-.reports-grid { width: 100%; height: max(440px, 55vh); --ag-font-family: Tahoma, Arial, sans-serif; --ag-font-size: 11px; --ag-background-color: var(--surface); --ag-foreground-color: var(--foreground); --ag-header-background-color: color-mix(in srgb, #f8b900 16%, var(--surface)); --ag-header-text-color: var(--foreground); --ag-border-color: var(--separator); --ag-row-border-color: var(--separator); --ag-odd-row-background-color: color-mix(in srgb, var(--default) 35%, var(--surface)); --ag-input-background-color: var(--field-background); --ag-input-border-color: var(--field-border); --ag-header-column-separator-display: block; --ag-header-column-separator-color: var(--separator); --ag-wrapper-border-radius: 0; --ag-cell-horizontal-padding: 13px; --ag-row-hover-color: color-mix(in srgb, #f8b900 7%, var(--surface)); --ag-selected-row-background-color: color-mix(in srgb, #f8b900 12%, var(--surface)); }
+.reports-grid { width: 100%; height: max(440px, 55vh); --ag-font-family: yekanf, Tahoma, Arial, sans-serif; --ag-font-size: 11px; --ag-background-color: var(--surface); --ag-foreground-color: var(--foreground); --ag-header-background-color: color-mix(in srgb, #f8b900 16%, var(--surface)); --ag-header-text-color: var(--foreground); --ag-border-color: var(--separator); --ag-row-border-color: var(--separator); --ag-odd-row-background-color: color-mix(in srgb, var(--default) 35%, var(--surface)); --ag-input-background-color: var(--field-background); --ag-input-border-color: var(--field-border); --ag-header-column-separator-display: block; --ag-header-column-separator-color: var(--separator); --ag-wrapper-border-radius: 0; --ag-cell-horizontal-padding: 13px; --ag-row-hover-color: color-mix(in srgb, #f8b900 7%, var(--surface)); --ag-selected-row-background-color: color-mix(in srgb, #f8b900 12%, var(--surface)); }
 .dark .reports-grid { --ag-header-background-color: #202c3c; --ag-odd-row-background-color: #171f29; }
 .reports-grid .ag-root-wrapper { border: 0; border-radius: 0; }
 .reports-grid .ag-header-cell-label { justify-content: center; font-size: 10px; font-weight: 800; }
@@ -204,11 +245,11 @@ button svg { width: 20px; height: 20px; }
 .description-renderer > button:hover { color: #d99f00; text-decoration: underline; }
 .dark .description-renderer > button { color: #ffd451; }
 .reports-grid .ag-floating-filter-body input { text-align: center; }
-.status-filter-select { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 7px; color: var(--foreground); font: 9px Tahoma, Arial, sans-serif; text-align: center; }
+.status-filter-select { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 7px; color: var(--foreground); font: 9px yekanf, Tahoma, Arial, sans-serif; text-align: center; }
 .status-filter-select:focus { border-color: #f8b900; box-shadow: 0 0 0 2px rgb(248 185 0 / .16); }
 .persian-date-range-filter { position: relative; display: grid; width: 100%; grid-template-columns: 1fr 1fr; align-items: center; gap: 4px; padding-left: 22px; }
 .range-date-field, .range-date-field .rmdp-container { width: 100%; min-width: 0; }
-.persian-date-filter-input { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 5px; color: var(--foreground); font: 9px Tahoma, Arial, sans-serif; text-align: center; cursor: pointer; }
+.persian-date-filter-input { width: 100%; height: 30px; border: 1px solid var(--field-border); border-radius: 6px; outline: none; background: var(--field-background); padding: 0 5px; color: var(--foreground); font: 9px yekanf, Tahoma, Arial, sans-serif; text-align: center; cursor: pointer; }
 .persian-date-filter-input:focus { border-color: #f8b900; box-shadow: 0 0 0 2px rgb(248 185 0 / .16); }
 .persian-date-range-filter > button { position: absolute; z-index: 2; left: 0; display: grid; width: 20px; height: 22px; place-items: center; border: 0; border-radius: 5px; background: transparent; color: var(--muted); }
 .persian-date-range-filter > button:hover { background: var(--default); color: #dc2626; }
@@ -219,7 +260,7 @@ button svg { width: 20px; height: 20px; }
 .persian-popup-date-input > button:hover { background: var(--default); color: #dc2626; }
 .persian-popup-date-input > button svg { width: 12px; height: 12px; }
 .reports-grid .ag-filter-body-wrapper .persian-date-filter-input { height: 34px; font-size: 10px; }
-.persian-filter-calendar { --rmdp-primary-purple: #f8b900; --rmdp-secondary-purple: #d99f00; font-family: Tahoma, Arial, sans-serif !important; }
+.persian-filter-calendar { --rmdp-primary-purple: #f8b900; --rmdp-secondary-purple: #d99f00; font-family: yekanf, Tahoma, Arial, sans-serif !important; }
 .persian-filter-calendar.rmdp-wrapper { border-color: var(--separator); background: var(--surface); color: var(--foreground); box-shadow: 0 14px 40px rgb(15 23 42 / .2); }
 .persian-filter-calendar .rmdp-calendar { background: var(--surface); }
 .persian-filter-calendar .rmdp-header-values, .persian-filter-calendar .rmdp-day { color: var(--foreground); }
