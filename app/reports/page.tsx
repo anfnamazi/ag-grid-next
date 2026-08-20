@@ -3,8 +3,8 @@ import { AppShell } from "../components/app-shell";
 import { ReportsTable } from "./reports-table";
 
 export const metadata: Metadata = {
-  title: "گزارش محتوا",
-  description: "فهرست و گزارش درخواست‌های محتوایی",
+  title: "Content Reports | گزارش محتوا",
+  description: "Bilingual content request reports",
 };
 
 export default function ReportsPage() {

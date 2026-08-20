@@ -1,11 +1,11 @@
 export type ReportStatus =
-  | "ثبت اولیه"
-  | "درحال بررسی"
-  | "در حال تولید محتوا"
-  | "محتوا تولید شد"
-  | "کل محتوا تایید شد"
-  | "بارگذاری شد"
-  | "محتوای بارگذاری شده چک شد";
+  | "initial"
+  | "review"
+  | "producing"
+  | "produced"
+  | "approved"
+  | "uploaded"
+  | "checked";
 
 export type ReportRow = {
   id: number;

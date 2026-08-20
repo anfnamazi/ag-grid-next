@@ -31,7 +31,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword1, keyword2",
     notes: "موضوعات مرتبط با گزارش 1",
-    status: "محتوا تولید شد",
+    status: "produced",
   },
   {
     id: 2,
@@ -45,7 +45,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword3, keyword4",
     notes: "موضوعات مرتبط با گزارش 2",
-    status: "در حال تولید محتوا",
+    status: "producing",
   },
   {
     id: 3,
@@ -60,7 +60,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword5, keyword6",
     notes: "موضوعات مرتبط با گزارش 3",
-    status: "ثبت اولیه",
+    status: "initial",
   },
   {
     id: 4,
@@ -75,7 +75,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword7, keyword8",
     notes: "موضوعات مرتبط با گزارش 4",
-    status: "درحال بررسی",
+    status: "review",
   },
   {
     id: 5,
@@ -90,7 +90,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword9, keyword10",
     notes: "موضوعات مرتبط با گزارش 5",
-    status: "محتوا تولید شد",
+    status: "produced",
   },
   {
     id: 6,
@@ -105,7 +105,7 @@ const reports: ReportRow[] = [
     showPlace: "",
     keywords: "keyword11, keyword12",
     notes: "موضوعات مرتبط با گزارش 6",
-    status: "ثبت اولیه",
+    status: "initial",
   },
 ];
 
@@ -182,8 +182,8 @@ const matchesCondition = (
     return cellNumber === filter;
   }
 
-  const cellText = String(value).toLocaleLowerCase("fa-IR");
-  const filterText = String(model.filter ?? "").toLocaleLowerCase("fa-IR");
+  const cellText = String(value).toLocaleLowerCase();
+  const filterText = String(model.filter ?? "").toLocaleLowerCase();
   if (!filterText) return true;
   if (type === "equals") return cellText === filterText;
   if (type === "notEqual") return cellText !== filterText;
@@ -202,13 +202,13 @@ export async function GET(request: NextRequest) {
     {},
   );
   const sortModel = parseJson<ApiSortModel[]>(params.get("sort"), []);
-  const search = (params.get("search") ?? "").trim().toLocaleLowerCase("fa-IR");
+  const search = (params.get("search") ?? "").trim().toLocaleLowerCase();
 
   let filteredReports = reports.filter((report) => {
     const matchesSearch =
       !search ||
       Object.values(report).some((value) =>
-        String(value).toLocaleLowerCase("fa-IR").includes(search),
+        String(value).toLocaleLowerCase().includes(search),
       );
     if (!matchesSearch) return false;
 

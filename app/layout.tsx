@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { LanguageProvider } from "./components/language-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "حامیران پنل | داشبورد مدیریت",
-    template: "%s | حامیران پنل",
+    default: "Hamiran Panel | حامیران پنل",
+    template: "%s | Hamiran Panel",
   },
-  description: "پنل مدیریت فارسی، راست‌چین و واکنش‌گرا با Next.js و HeroUI",
+  description: "Bilingual Persian and English management dashboard",
 };
 
 export const viewport: Viewport = {
@@ -25,6 +26,10 @@ const themeScript = `
       : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.classList.toggle("dark", theme === "dark");
     document.documentElement.dataset.theme = theme;
+    const language = localStorage.getItem("hamrah-language") === "en" ? "en" : "fa";
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "fa" ? "rtl" : "ltr";
+    document.documentElement.dataset.language = language;
   } catch (_) {}
 `;
 
@@ -34,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>{children}</body>
+      <body><LanguageProvider>{children}</LanguageProvider></body>
     </html>
   );
 }

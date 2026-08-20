@@ -32,6 +32,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import gregorian from "react-date-object/calendars/gregorian";
 import persian from "react-date-object/calendars/persian";
 import gregorianEn from "react-date-object/locales/gregorian_en";
+import persianEn from "react-date-object/locales/persian_en";
 import persianFa from "react-date-object/locales/persian_fa";
 import {
   useDeferredValue,
@@ -45,17 +46,18 @@ import type {
   ReportsResponse,
   ReportStatus,
 } from "./reports-types";
+import { useLanguage } from "../components/language-provider";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const statusClass: Record<ReportStatus, string> = {
-  "ثبت اولیه": "status-initial",
-  "درحال بررسی": "status-review",
-  "در حال تولید محتوا": "status-producing",
-  "محتوا تولید شد": "status-produced",
-  "کل محتوا تایید شد": "status-approved",
-  "بارگذاری شد": "status-uploaded",
-  "محتوای بارگذاری شده چک شد": "status-checked",
+  initial: "status-initial",
+  review: "status-review",
+  producing: "status-producing",
+  produced: "status-produced",
+  approved: "status-approved",
+  uploaded: "status-uploaded",
+  checked: "status-checked",
 };
 
 const statusOptions = Object.keys(statusClass) as ReportStatus[];
@@ -73,6 +75,24 @@ const persianDateFormatter = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
 });
 
 const persianDateTimeFormatter = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+  timeZone: "Asia/Tehran",
+});
+
+const englishDateFormatter = new Intl.DateTimeFormat("en-US-u-ca-persian", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "Asia/Tehran",
+});
+
+const englishDateTimeFormatter = new Intl.DateTimeFormat("en-US-u-ca-persian", {
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
@@ -145,74 +165,111 @@ const dateFilterComparator = (filterDate: unknown, cellValue: unknown) => {
   return cellDay === filterDay ? 0 : cellDay < filterDay ? -1 : 1;
 };
 
-const localeText = {
-  page: "صفحه",
-  more: "بیشتر",
-  to: "تا",
-  of: "از",
-  next: "بعدی",
-  last: "آخرین",
-  first: "اولین",
-  previous: "قبلی",
-  loadingOoo: "در حال بارگذاری...",
-  noRowsToShow: "داده‌ای برای نمایش وجود ندارد",
-  pageSizeSelectorLabel: "تعداد در صفحه:",
-  filterOoo: "جستجو...",
-  equals: "برابر با",
-  inRange: "بین دو تاریخ",
-  inRangeStart: "از تاریخ",
-  inRangeEnd: "تا تاریخ",
-  greaterThanOrEqual: "از تاریخ به بعد",
-  lessThanOrEqual: "تا تاریخ",
-  notEqual: "نابرابر با",
-  contains: "شامل",
-  notContains: "شامل نباشد",
-  startsWith: "شروع شود با",
-  endsWith: "پایان یابد با",
-  blank: "خالی",
-  notBlank: "خالی نباشد",
-  applyFilter: "اعمال",
-  resetFilter: "بازنشانی",
-  clearFilter: "پاک کردن",
-  cancelFilter: "انصراف",
-};
+const reportsCopy = {
+  fa: {
+    management: "مدیریت محتوا", title: "گزارش درخواست‌های محتوا",
+    subtitle: "فهرست درخواست‌ها را جستجو، فیلتر و مرتب‌سازی کنید.", newRequest: "درخواست جدید",
+    loadError: "دریافت گزارش‌ها با خطا مواجه شد.", retry: "تلاش دوباره",
+    searchLabel: "جستجو در تمام گزارش‌ها", searchPlaceholder: "جستجو در تمام ستون‌ها...",
+    registeredRequests: "درخواست ثبت‌شده", row: "ردیف", requestNumber: "شماره درخواست",
+    requester: "درخواست کننده", createdAt: "تاریخ ثبت", subject: "عنوان محتوا",
+    description: "شرح محتوا", showDate: "تاریخ نمایش", showTime: "زمان نمایش",
+    showPlace: "محل نمایش", status: "وضعیت درخواست", operations: "عملیات",
+    history: "نمایش سوابق", historyTitle: "نمایش سوابق ویرایش", edit: "ویرایش",
+    statusHistory: "تاریخچه وضعیت", statusHistoryTitle: "تاریخچه تغییر وضعیت", delete: "حذف",
+    request: "درخواست شماره", more: "بیشتر", less: "کمتر", statusFilter: "فیلتر وضعیت درخواست",
+    all: "همه موارد", from: "از", to: "تا", chooseDate: "انتخاب تاریخ",
+    clear: "پاک کردن", clearDateRange: "پاک کردن بازه تاریخ", clearDate: "پاک کردن تاریخ",
+    statusLabels: {
+      initial: "ثبت اولیه", review: "درحال بررسی", producing: "در حال تولید محتوا",
+      produced: "محتوا تولید شد", approved: "کل محتوا تایید شد", uploaded: "بارگذاری شد",
+      checked: "محتوای بارگذاری شده چک شد",
+    } satisfies Record<ReportStatus, string>,
+  },
+  en: {
+    management: "Content management", title: "Content request reports",
+    subtitle: "Search, filter, and sort all content requests.", newRequest: "New request",
+    loadError: "Unable to load reports.", retry: "Try again",
+    searchLabel: "Search all reports", searchPlaceholder: "Search all columns...",
+    registeredRequests: "registered requests", row: "Row", requestNumber: "Request number",
+    requester: "Requester", createdAt: "Created at", subject: "Content title",
+    description: "Description", showDate: "Display date", showTime: "Display time",
+    showPlace: "Display location", status: "Request status", operations: "Actions",
+    history: "View history", historyTitle: "View edit history", edit: "Edit",
+    statusHistory: "Status history", statusHistoryTitle: "View status history", delete: "Delete",
+    request: "request number", more: "Show more", less: "Show less", statusFilter: "Filter request status",
+    all: "All items", from: "From", to: "To", chooseDate: "Choose date",
+    clear: "Clear", clearDateRange: "Clear date range", clearDate: "Clear date",
+    statusLabels: {
+      initial: "Initial", review: "Under review", producing: "Producing content",
+      produced: "Content produced", approved: "Content approved", uploaded: "Uploaded",
+      checked: "Uploaded content checked",
+    } satisfies Record<ReportStatus, string>,
+  },
+} as const;
+
+const localeTextByLanguage = {
+  fa: {
+    page: "صفحه", more: "بیشتر", to: "تا", of: "از", next: "بعدی", last: "آخرین",
+    first: "اولین", previous: "قبلی", loadingOoo: "در حال بارگذاری...",
+    noRowsToShow: "داده‌ای برای نمایش وجود ندارد", pageSizeSelectorLabel: "تعداد در صفحه:",
+    filterOoo: "جستجو...", equals: "برابر با", inRange: "بین دو تاریخ",
+    inRangeStart: "از تاریخ", inRangeEnd: "تا تاریخ", greaterThanOrEqual: "از تاریخ به بعد",
+    lessThanOrEqual: "تا تاریخ", notEqual: "نابرابر با", contains: "شامل",
+    notContains: "شامل نباشد", startsWith: "شروع شود با", endsWith: "پایان یابد با",
+    blank: "خالی", notBlank: "خالی نباشد", applyFilter: "اعمال", resetFilter: "بازنشانی",
+    clearFilter: "پاک کردن", cancelFilter: "انصراف",
+  },
+  en: {
+    page: "Page", more: "More", to: "to", of: "of", next: "Next", last: "Last",
+    first: "First", previous: "Previous", loadingOoo: "Loading...", noRowsToShow: "No rows to show",
+    pageSizeSelectorLabel: "Rows per page:", filterOoo: "Search...", equals: "Equals",
+    inRange: "In range", inRangeStart: "From", inRangeEnd: "To",
+    greaterThanOrEqual: "Greater than or equal", lessThanOrEqual: "Less than or equal",
+    notEqual: "Not equal", contains: "Contains", notContains: "Does not contain",
+    startsWith: "Starts with", endsWith: "Ends with", blank: "Blank", notBlank: "Not blank",
+    applyFilter: "Apply", resetFilter: "Reset", clearFilter: "Clear", cancelFilter: "Cancel",
+  },
+} as const;
 
 function OperationRenderer({ data }: ICellRendererParams<ReportRow>) {
+  const { language } = useLanguage();
+  const t = reportsCopy[language];
   if (!data) return null;
   const action = (label: string) =>
-    window.alert(`${label} درخواست شماره ${data.requestNumber}`);
+    window.alert(`${label} ${t.request} ${data.requestNumber}`);
   return (
     <div className="operation-buttons">
       <button
         type="button"
-        title="نمایش سوابق ویرایش"
-        aria-label={`نمایش سوابق درخواست ${data.requestNumber}`}
-        onClick={() => action("نمایش سوابق")}
+        title={t.historyTitle}
+        aria-label={`${t.history} ${t.request} ${data.requestNumber}`}
+        onClick={() => action(t.history)}
       >
         <History />
       </button>
       <button
         type="button"
-        title="ویرایش"
-        aria-label={`ویرایش درخواست ${data.requestNumber}`}
-        onClick={() => action("ویرایش")}
+        title={t.edit}
+        aria-label={`${t.edit} ${t.request} ${data.requestNumber}`}
+        onClick={() => action(t.edit)}
       >
         <Pencil />
       </button>
       <button
         type="button"
-        title="تاریخچه تغییر وضعیت"
-        aria-label={`تاریخچه وضعیت درخواست ${data.requestNumber}`}
-        onClick={() => action("تاریخچه وضعیت")}
+        title={t.statusHistoryTitle}
+        aria-label={`${t.statusHistory} ${t.request} ${data.requestNumber}`}
+        onClick={() => action(t.statusHistory)}
       >
         <Clock3 />
       </button>
       <button
         type="button"
         className="delete-action"
-        title="حذف"
-        aria-label={`حذف درخواست ${data.requestNumber}`}
-        onClick={() => action("حذف")}
+        title={t.delete}
+        aria-label={`${t.delete} ${t.request} ${data.requestNumber}`}
+        onClick={() => action(t.delete)}
       >
         <Trash2 />
       </button>
@@ -223,14 +280,19 @@ function OperationRenderer({ data }: ICellRendererParams<ReportRow>) {
 function StatusRenderer({
   value,
 }: ICellRendererParams<ReportRow, ReportStatus>) {
+  const { language } = useLanguage();
   return value ? (
-    <span className={`status-badge ${statusClass[value]}`}>{value}</span>
+    <span className={`status-badge ${statusClass[value]}`}>
+      {reportsCopy[language].statusLabels[value]}
+    </span>
   ) : null;
 }
 
 function ShowMoreCellRenderer({
   value,
 }: ICellRendererParams<ReportRow, string>) {
+  const { language } = useLanguage();
+  const t = reportsCopy[language];
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -267,7 +329,7 @@ function ShowMoreCellRenderer({
             setExpanded((current) => !current);
           }}
         >
-          {expanded ? "کمتر" : "بیشتر"}
+          {expanded ? t.less : t.more}
         </button>
       )}
     </div>
@@ -278,6 +340,8 @@ function StatusFloatingFilter({
   model,
   onModelChange,
 }: CustomFloatingFilterProps<IFilter, ReportRow, unknown, StatusFilterModel>) {
+  const { language } = useLanguage();
+  const t = reportsCopy[language];
   const updateFilter = (value: string) => {
     onModelChange(
       value ? { filterType: "text", type: "equals", filter: value } : null,
@@ -286,15 +350,15 @@ function StatusFloatingFilter({
 
   return (
     <select
-      aria-label="فیلتر وضعیت درخواست"
+      aria-label={t.statusFilter}
       className="status-filter-select"
       value={model?.filter ?? ""}
       onChange={(event) => updateFilter(event.target.value)}
     >
-      <option value="">همه موارد</option>
+      <option value="">{t.all}</option>
       {statusOptions.map((status) => (
         <option value={status} key={status}>
-          {status}
+          {t.statusLabels[status]}
         </option>
       ))}
     </select>
@@ -305,13 +369,16 @@ function PersianDateFloatingFilter({
   model,
   onModelChange,
 }: CustomFloatingFilterProps<IFilter, ReportRow, unknown, DateFilterModel>) {
-  const toPersianDate = (date?: string | null) =>
+  const { language } = useLanguage();
+  const t = reportsCopy[language];
+  const pickerLocale = language === "fa" ? persianFa : persianEn;
+  const toPickerDate = (date?: string | null) =>
     date
       ? new DateObject({
           date,
           format: "YYYY-MM-DD",
           calendar: gregorian,
-        }).convert(persian, persianFa)
+        }).convert(persian, pickerLocale)
       : null;
   const toGregorianText = (date: DateObject | null) =>
     date
@@ -329,8 +396,8 @@ function PersianDateFloatingFilter({
       : model?.type === "lessThanOrEqual"
         ? model.dateFrom
         : null;
-  const startValue = toPersianDate(startText);
-  const endValue = toPersianDate(endText);
+  const startValue = toPickerDate(startText);
+  const endValue = toPickerDate(endText);
 
   const updateRange = (
     start: string | null | undefined,
@@ -372,9 +439,9 @@ function PersianDateFloatingFilter({
           editable={false}
           format="YYYY/MM/DD"
           inputClass="persian-date-filter-input"
-          locale={persianFa}
+          locale={pickerLocale}
           onChange={(date) => updateRange(toGregorianText(date), endText)}
-          placeholder="از"
+          placeholder={t.from}
           portal
           value={startValue}
           zIndex={1000}
@@ -388,9 +455,9 @@ function PersianDateFloatingFilter({
           editable={false}
           format="YYYY/MM/DD"
           inputClass="persian-date-filter-input"
-          locale={persianFa}
+          locale={pickerLocale}
           onChange={(date) => updateRange(startText, toGregorianText(date))}
-          placeholder="تا"
+          placeholder={t.to}
           portal
           value={endValue}
           zIndex={1000}
@@ -399,8 +466,8 @@ function PersianDateFloatingFilter({
       {(startValue || endValue) && (
         <button
           type="button"
-          aria-label="پاک کردن بازه تاریخ"
-          title="پاک کردن"
+          aria-label={t.clearDateRange}
+          title={t.clear}
           onClick={() => updateRange(null, null)}
         >
           <X />
@@ -415,8 +482,14 @@ function PersianDateInput({
   onDateChange,
   onFocusIn,
 }: CustomDateProps<ReportRow>) {
+  const { language } = useLanguage();
+  const t = reportsCopy[language];
+  const pickerLocale = language === "fa" ? persianFa : persianEn;
   const pickerValue = date
-    ? new DateObject({ date, calendar: gregorian }).convert(persian, persianFa)
+    ? new DateObject({ date, calendar: gregorian }).convert(
+        persian,
+        pickerLocale,
+      )
     : null;
 
   const selectDate = (selected: DateObject | null) => {
@@ -440,13 +513,13 @@ function PersianDateInput({
         editable={false}
         format="YYYY/MM/DD"
         inputClass="persian-date-filter-input"
-        locale={persianFa}
+        locale={pickerLocale}
         onChange={selectDate}
         onOpen={() => {
           onFocusIn?.();
           return true;
         }}
-        placeholder="انتخاب تاریخ"
+        placeholder={t.chooseDate}
         portal
         value={pickerValue}
         zIndex={1100}
@@ -454,8 +527,8 @@ function PersianDateInput({
       {pickerValue && (
         <button
           type="button"
-          aria-label="پاک کردن تاریخ"
-          title="پاک کردن"
+          aria-label={t.clearDate}
+          title={t.clear}
           onClick={() => selectDate(null)}
         >
           <X />
@@ -466,6 +539,11 @@ function PersianDateInput({
 }
 
 export function ReportsTable() {
+  const { direction, language, locale } = useLanguage();
+  const t = reportsCopy[language];
+  const localeText = localeTextByLanguage[language];
+  const dateFormatter = language === "fa" ? persianDateFormatter : englishDateFormatter;
+  const dateTimeFormatter = language === "fa" ? persianDateTimeFormatter : englishDateTimeFormatter;
   const [quickFilter, setQuickFilter] = useState("");
   const deferredQuickFilter = useDeferredValue(quickFilter);
   const [totalRows, setTotalRows] = useState(0);
@@ -520,7 +598,7 @@ export function ReportsTable() {
           } catch (error) {
             if (error instanceof DOMException && error.name === "AbortError") return;
             setTotalRows(0);
-            setLoadError("دریافت گزارش‌ها با خطا مواجه شد.");
+            setLoadError(t.loadError);
             params.failCallback();
           } finally {
             controllers.delete(controller);
@@ -534,12 +612,12 @@ export function ReportsTable() {
         controllers.clear();
       },
     };
-  }, [deferredQuickFilter, pageSize]);
+  }, [deferredQuickFilter, pageSize, t.loadError]);
 
   const columns = useMemo<ColDef<ReportRow>[]>(
     () => [
       {
-        headerName: "ردیف",
+        headerName: t.row,
         width: 76,
         minWidth: 76,
         sortable: false,
@@ -551,14 +629,14 @@ export function ReportsTable() {
       },
       {
         field: "requestNumber",
-        headerName: "شماره درخواست",
+        headerName: t.requestNumber,
         width: 130,
         filter: "agNumberColumnFilter",
       },
-      { field: "requester", headerName: "درخواست کننده", width: 145 },
+      { field: "requester", headerName: t.requester, width: 145 },
       {
         colId: "createdAt",
-        headerName: "تاریخ ثبت",
+        headerName: t.createdAt,
         width: 245,
         cellDataType: "date",
         dateComponent: PersianDateInput,
@@ -574,19 +652,19 @@ export function ReportsTable() {
         valueGetter: (params) => toDate(params.data?.createdAt),
         valueFormatter: (params) =>
           params.value instanceof Date
-            ? persianDateTimeFormatter.format(params.value)
+            ? dateTimeFormatter.format(params.value)
             : "---",
       },
       {
         field: "subject",
-        headerName: "عنوان محتوا",
+        headerName: t.subject,
         minWidth: 165,
         flex: 1,
         tooltipField: "subject",
       },
       {
         field: "description",
-        headerName: "شرح محتوا",
+        headerName: t.description,
         minWidth: 210,
         flex: 1.35,
         autoHeight: true,
@@ -595,7 +673,7 @@ export function ReportsTable() {
       },
       {
         colId: "showDate",
-        headerName: "تاریخ نمایش",
+        headerName: t.showDate,
         width: 245,
         cellDataType: "date",
         dateComponent: PersianDateInput,
@@ -611,19 +689,19 @@ export function ReportsTable() {
         valueGetter: (params) => toDate(params.data?.showDate),
         valueFormatter: (params) =>
           params.value instanceof Date
-            ? persianDateFormatter.format(params.value)
+            ? dateFormatter.format(params.value)
             : "---",
       },
       {
         field: "showTime",
-        headerName: "زمان نمایش",
+        headerName: t.showTime,
         width: 120,
         filter: "agTextColumnFilter",
       },
-      { field: "showPlace", headerName: "محل نمایش", width: 135 },
+      { field: "showPlace", headerName: t.showPlace, width: 135 },
       {
         field: "status",
-        headerName: "وضعیت درخواست",
+        headerName: t.status,
         width: 190,
         cellRenderer: StatusRenderer,
         filter: "agTextColumnFilter",
@@ -635,7 +713,7 @@ export function ReportsTable() {
         floatingFilterComponent: StatusFloatingFilter,
       },
       {
-        headerName: "عملیات",
+        headerName: t.operations,
         width: 155,
         minWidth: 155,
         sortable: false,
@@ -645,7 +723,7 @@ export function ReportsTable() {
         cellRenderer: OperationRenderer,
       },
     ],
-    [],
+    [dateFormatter, dateTimeFormatter, t],
   );
 
   const defaultColDef = useMemo<ColDef<ReportRow>>(
@@ -663,12 +741,12 @@ export function ReportsTable() {
     <>
       <div className="reports-heading">
         <div>
-          <p>مدیریت محتوا</p>
-          <h1>گزارش درخواست‌های محتوا</h1>
-          <span>فهرست درخواست‌ها را جستجو، فیلتر و مرتب‌سازی کنید.</span>
+          <p>{t.management}</p>
+          <h1>{t.title}</h1>
+          <span>{t.subtitle}</span>
         </div>
         <Button variant="primary">
-          <Plus /> درخواست جدید
+          <Plus /> {t.newRequest}
         </Button>
       </div>
       <section className="reports-panel">
@@ -676,7 +754,7 @@ export function ReportsTable() {
           <div className="reports-error" role="alert">
             <span>{loadError}</span>
             <button type="button" onClick={() => setReloadKey((key) => key + 1)}>
-              <RefreshCw /> تلاش دوباره
+              <RefreshCw /> {t.retry}
             </button>
           </div>
         )}
@@ -684,25 +762,25 @@ export function ReportsTable() {
           <div className="reports-search">
             <Search />
             <Input
-              aria-label="جستجو در تمام گزارش‌ها"
+              aria-label={t.searchLabel}
               fullWidth
-              placeholder="جستجو در تمام ستون‌ها..."
+              placeholder={t.searchPlaceholder}
               value={quickFilter}
               onChange={(event) => setQuickFilter(event.target.value)}
               variant="secondary"
             />
           </div>
           <div className="reports-count">
-            <strong>{totalRows.toLocaleString("fa-IR")}</strong>
-            <span>درخواست ثبت‌شده</span>
+            <strong>{totalRows.toLocaleString(locale)}</strong>
+            <span>{t.registeredRequests}</span>
           </div>
         </div>
-        <div className="reports-grid" dir="rtl">
+        <div className="reports-grid" dir={direction}>
           <AgGridReact<ReportRow>
-            key={reloadKey}
+            key={`${language}-${reloadKey}`}
             columnDefs={columns}
             defaultColDef={defaultColDef}
-            enableRtl
+            enableRtl={language === "fa"}
             datasource={dataSource}
             getRowId={(params) => String(params.data.id)}
             localeText={localeText}
