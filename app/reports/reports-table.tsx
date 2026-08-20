@@ -16,14 +16,27 @@ import {
   type CustomDateProps,
   type CustomFloatingFilterProps,
 } from "ag-grid-react";
-import { Clock3, History, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import {
+  Clock3,
+  History,
+  Pencil,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import gregorian from "react-date-object/calendars/gregorian";
 import persian from "react-date-object/calendars/persian";
 import gregorianEn from "react-date-object/locales/gregorian_en";
 import persianFa from "react-date-object/locales/persian_fa";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { reportRows, type ReportRow, type ReportStatus } from "./reports-data";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type {
+  ReportRow,
+  ReportsResponse,
+  ReportStatus,
+} from "./reports-types";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -446,6 +459,47 @@ function PersianDateInput({
 
 export function ReportsTable() {
   const [quickFilter, setQuickFilter] = useState("");
+  const [reportRows, setReportRows] = useState<ReportRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadReports = async () => {
+      setIsLoading(true);
+      setLoadError(null);
+
+      try {
+        const response = await fetch("/api/reports", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const result = (await response.json()) as ReportsResponse;
+        if (!Array.isArray(result.data)) {
+          throw new Error("Invalid reports response");
+        }
+
+        setReportRows(result.data);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setReportRows([]);
+        setLoadError("دریافت گزارش‌ها با خطا مواجه شد.");
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    };
+
+    void loadReports();
+    return () => controller.abort();
+  }, [reloadKey]);
+
   const columns = useMemo<ColDef<ReportRow>[]>(
     () => [
       {
@@ -582,6 +636,14 @@ export function ReportsTable() {
         </Button>
       </div>
       <section className="reports-panel">
+        {loadError && (
+          <div className="reports-error" role="alert">
+            <span>{loadError}</span>
+            <button type="button" onClick={() => setReloadKey((key) => key + 1)}>
+              <RefreshCw /> تلاش دوباره
+            </button>
+          </div>
+        )}
         <div className="reports-toolbar">
           <div className="reports-search">
             <Search />
@@ -606,6 +668,7 @@ export function ReportsTable() {
             enableRtl
             getRowId={(params) => String(params.data.id)}
             localeText={localeText}
+            loading={isLoading}
             pagination
             paginationPageSize={5}
             paginationPageSizeSelector={[5, 10, 50]}
@@ -616,6 +679,7 @@ export function ReportsTable() {
             floatingFiltersHeight={45}
             theme={themeQuartz}
             animateRows
+            rowSelection={"multiple"}
           />
         </div>
       </section>

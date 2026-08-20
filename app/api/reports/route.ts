@@ -1,29 +1,6 @@
-export type ReportStatus =
-  | "ثبت اولیه"
-  | "درحال بررسی"
-  | "در حال تولید محتوا"
-  | "محتوا تولید شد"
-  | "کل محتوا تایید شد"
-  | "بارگذاری شد"
-  | "محتوای بارگذاری شده چک شد";
+import type { ReportRow, ReportsResponse } from "@/app/reports/reports-types";
 
-export type ReportRow = {
-  id: number;
-  requestNumber: number;
-  requester: string;
-  createdAt: string;
-  subject: string;
-  description: string;
-  showDate: string;
-  showTime: string;
-  showPlace: string;
-  keywords: string;
-  notes: string;
-  status: ReportStatus;
-};
-
-// داده‌های JSON تبدیل‌شده از CSV ارائه‌شده.
-export const reportRows: ReportRow[] = [
+const reports: ReportRow[] = [
   {
     id: 1,
     requestNumber: 1,
@@ -114,3 +91,11 @@ export const reportRows: ReportRow[] = [
     status: "ثبت اولیه",
   },
 ];
+
+export async function GET() {
+  const response: ReportsResponse = { data: reports };
+
+  return Response.json(response, {
+    headers: { "Cache-Control": "no-store" },
+  });
+}

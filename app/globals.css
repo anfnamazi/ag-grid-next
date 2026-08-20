@@ -224,6 +224,12 @@ button svg { width: 20px; height: 20px; }
 .reports-heading .button { box-shadow: 0 8px 22px rgb(248 185 0 / .24); font-size: 11px; }
 .reports-heading .button svg { width: 16px; }
 .reports-panel { overflow: hidden; border: 1px solid var(--separator); border-radius: 15px; background: var(--surface); box-shadow: var(--panel-shadow); }
+.reports-error { display: flex; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid #fecaca; background: #fff1f2; padding: 10px 18px; color: #b91c1c; font-size: 11px; }
+.reports-error button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #fecaca; border-radius: 7px; background: #fff; padding: 6px 9px; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.reports-error button:hover { background: #ffe4e6; }
+.reports-error button svg { width: 14px; height: 14px; }
+.dark .reports-error { border-color: #7f1d1d; background: #451a1a; color: #fca5a5; }
+.dark .reports-error button { border-color: #7f1d1d; background: #2b1515; }
 .reports-toolbar { display: flex; min-height: 74px; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--separator); padding: 14px 18px; }
 .reports-search { position: relative; display: flex; width: min(370px, 100%); align-items: center; }
 .reports-search > svg { position: absolute; z-index: 2; right: 13px; width: 18px; color: var(--muted); pointer-events: none; }
