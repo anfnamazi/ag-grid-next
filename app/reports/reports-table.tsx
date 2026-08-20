@@ -8,7 +8,9 @@ import {
   type ColDef,
   type DateFilterModel,
   type ICellRendererParams,
+  type IDatasource,
   type IFilter,
+  type IGetRowsParams,
   type ValueGetterParams,
 } from "ag-grid-community";
 import {
@@ -31,7 +33,13 @@ import gregorian from "react-date-object/calendars/gregorian";
 import persian from "react-date-object/calendars/persian";
 import gregorianEn from "react-date-object/locales/gregorian_en";
 import persianFa from "react-date-object/locales/persian_fa";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useDeferredValue,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type {
   ReportRow,
   ReportsResponse,
@@ -459,46 +467,74 @@ function PersianDateInput({
 
 export function ReportsTable() {
   const [quickFilter, setQuickFilter] = useState("");
-  const [reportRows, setReportRows] = useState<ReportRow[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const deferredQuickFilter = useDeferredValue(quickFilter);
+  const [totalRows, setTotalRows] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const dataSource = useMemo<IDatasource>(() => {
+    const controllers = new Set<AbortController>();
 
-    const loadReports = async () => {
-      setIsLoading(true);
-      setLoadError(null);
+    return {
+      getRows(params: IGetRowsParams<ReportRow>) {
+        const controller = new AbortController();
+        controllers.add(controller);
 
-      try {
-        const response = await fetch("/api/reports", {
-          cache: "no-store",
-          signal: controller.signal,
-        });
+        const requestRows = async () => {
+          const requestedPageSize = pageSize;
+          const pageNumber = Math.floor(params.startRow / requestedPageSize) + 1;
+          const searchParams = new URLSearchParams({
+            pageNumber: String(pageNumber),
+            pageSize: String(requestedPageSize),
+          });
 
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
+          if (deferredQuickFilter.trim()) {
+            searchParams.set("search", deferredQuickFilter.trim());
+          }
+          if (Object.keys(params.filterModel).length) {
+            searchParams.set("filter", JSON.stringify(params.filterModel));
+          }
+          if (params.sortModel.length) {
+            searchParams.set("sort", JSON.stringify(params.sortModel));
+          }
 
-        const result = (await response.json()) as ReportsResponse;
-        if (!Array.isArray(result.data)) {
-          throw new Error("Invalid reports response");
-        }
+          try {
+            setLoadError(null);
+            const response = await fetch(`/api/reports?${searchParams}`, {
+              cache: "no-store",
+              signal: controller.signal,
+            });
 
-        setReportRows(result.data);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        setReportRows([]);
-        setLoadError("دریافت گزارش‌ها با خطا مواجه شد.");
-      } finally {
-        if (!controller.signal.aborted) setIsLoading(false);
-      }
+            if (!response.ok) {
+              throw new Error(`Request failed with status ${response.status}`);
+            }
+
+            const result = (await response.json()) as ReportsResponse;
+            if (!Array.isArray(result.data) || !Number.isFinite(result.total)) {
+              throw new Error("Invalid reports response");
+            }
+
+            setTotalRows(result.total);
+            params.successCallback(result.data, result.total);
+          } catch (error) {
+            if (error instanceof DOMException && error.name === "AbortError") return;
+            setTotalRows(0);
+            setLoadError("دریافت گزارش‌ها با خطا مواجه شد.");
+            params.failCallback();
+          } finally {
+            controllers.delete(controller);
+          }
+        };
+
+        void requestRows();
+      },
+      destroy() {
+        controllers.forEach((controller) => controller.abort());
+        controllers.clear();
+      },
     };
-
-    void loadReports();
-    return () => controller.abort();
-  }, [reloadKey]);
+  }, [deferredQuickFilter, pageSize]);
 
   const columns = useMemo<ColDef<ReportRow>[]>(
     () => [
@@ -657,23 +693,30 @@ export function ReportsTable() {
             />
           </div>
           <div className="reports-count">
-            <strong>{reportRows.length.toLocaleString("fa-IR")}</strong>
+            <strong>{totalRows.toLocaleString("fa-IR")}</strong>
             <span>درخواست ثبت‌شده</span>
           </div>
         </div>
         <div className="reports-grid" dir="rtl">
           <AgGridReact<ReportRow>
+            key={reloadKey}
             columnDefs={columns}
             defaultColDef={defaultColDef}
             enableRtl
+            datasource={dataSource}
             getRowId={(params) => String(params.data.id)}
             localeText={localeText}
-            loading={isLoading}
+            rowModelType="infinite"
             pagination
-            paginationPageSize={5}
+            cacheBlockSize={pageSize}
+            paginationPageSize={pageSize}
             paginationPageSizeSelector={[5, 10, 50]}
-            quickFilterText={quickFilter}
-            rowData={reportRows}
+            onPaginationChanged={(event) => {
+              const nextPageSize = event.api.paginationGetPageSize();
+              setPageSize((current) =>
+                current === nextPageSize ? current : nextPageSize,
+              );
+            }}
             rowHeight={54}
             headerHeight={48}
             floatingFiltersHeight={45}

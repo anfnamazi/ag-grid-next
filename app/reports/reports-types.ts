@@ -24,4 +24,7 @@ export type ReportRow = {
 
 export type ReportsResponse = {
   data: ReportRow[];
+  total: number;
+  pageNumber: number;
+  pageSize: number;
 };
