@@ -24,5 +24,16 @@ npm run dev
 
 ```bash
 npm run lint
+npm run typecheck
 npm run build
 ```
+
+## ساختار کد
+
+- `app/components/shell`: پوسته اصلی، هدر، سایدبار و محتوای چندزبانه آن‌ها
+- `app/components/dashboard`: اجزای مستقل داشبورد و داده‌های نمایشی آن
+- `app/reports/_components`: اجزای جدول و رندرکننده‌های AG Grid
+- `app/reports/_hooks`: مدیریت منبع داده سروری، ستون‌ها و ارتفاع ردیف‌ها
+- `app/reports/_lib`: ترجمه‌ها و ابزارهای تاریخ گزارش‌ها
+- `lib/reports`: مدل دامنه، داده نمونه و منطق جستجو، فیلتر و مرتب‌سازی API
+- `app/_styles`: استایل‌های تفکیک‌شده پایه، پوسته، داشبورد و گزارش‌ها

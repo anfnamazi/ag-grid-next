@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { AppShell } from "../components/app-shell";
-import { ReportsTable } from "./reports-table";
+import { AppShell } from "../components/shell/app-shell";
+import { ReportsTable } from "./_components/reports-table";
 
 export const metadata: Metadata = {
   title: "Content Reports | گزارش محتوا",
@@ -8,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function ReportsPage() {
-  return <AppShell><ReportsTable /></AppShell>;
+  return (
+    <AppShell>
+      <ReportsTable />
+    </AppShell>
+  );
 }

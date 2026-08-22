@@ -1,0 +1,134 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: yekan;
+  src: url("/fonts/yekan.woff") format("woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: yekanf;
+  src: url("/fonts/yekanf.woff") format("woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 200;
+  src: url("/fonts/IRANSansWeb200.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 300;
+  src: url("/fonts/IRANSansWeb300.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 400;
+  src: url("/fonts/IRANSansWeb400.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 500;
+  src: url("/fonts/IRANSansWeb500.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 600;
+  src: url("/fonts/IRANSansWeb600.woff") format("woff");
+}
+
+@font-face {
+  font-family: "IranSans";
+  font-weight: 900;
+  src: url("/fonts/IRANSansWeb900.woff") format("woff");
+}
+
+:root {
+  --accent: #f8b900;
+  --accent-foreground: #2b2100;
+  --background: #f4f7fb;
+  --foreground: #172033;
+  --surface: #fff;
+  --surface-foreground: #172033;
+  --overlay: #fff;
+  --muted: #727a8b;
+  --default: #f1f3f8;
+  --separator: #e8ebf2;
+  --field-background: #f6f7fa;
+  --field-border: #e8ebf2;
+  --field-border-width: 1px;
+  --radius: 0.65rem;
+  --sidebar-width: 282px;
+  --panel-shadow: 0 1px 2px rgb(15 23 42 / 0.025),
+    0 9px 32px rgb(15 23 42 / 0.035);
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0d1117;
+  --foreground: #edf1f8;
+  --surface: #151b24;
+  --surface-foreground: #edf1f8;
+  --overlay: #1a212c;
+  --muted: #9199a9;
+  --default: #202936;
+  --separator: #293241;
+  --field-background: #111720;
+  --field-foreground: #edf1f8;
+  --field-border: #2a3444;
+  --panel-shadow: 0 1px 2px rgb(0 0 0 / 0.12),
+    0 14px 38px rgb(0 0 0 / 0.12);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--background);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: yekanf, Tahoma, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button svg {
+  width: 20px;
+  height: 20px;
+}
+
+[dir="ltr"] body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

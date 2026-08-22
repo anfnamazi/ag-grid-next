@@ -1,5 +1,10 @@
-import { AppShell, DashboardContent } from "./components/app-shell";
+import { DashboardContent } from "./components/dashboard/dashboard-content";
+import { AppShell } from "./components/shell/app-shell";
 
 export default function Home() {
-  return <AppShell><DashboardContent /></AppShell>;
+  return (
+    <AppShell>
+      <DashboardContent />
+    </AppShell>
+  );
 }
