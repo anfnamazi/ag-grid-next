@@ -35,6 +35,7 @@ import gregorianEn from "react-date-object/locales/gregorian_en";
 import persianEn from "react-date-object/locales/persian_en";
 import persianFa from "react-date-object/locales/persian_fa";
 import {
+  useCallback,
   useDeferredValue,
   useLayoutEffect,
   useMemo,
@@ -49,6 +50,8 @@ import type {
 import { useLanguage } from "../components/language-provider";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
+
+const DEFAULT_REPORT_ROW_HEIGHT = 54;
 
 const statusClass: Record<ReportStatus, string> = {
   initial: "status-initial",
@@ -288,13 +291,21 @@ function StatusRenderer({
   ) : null;
 }
 
+type ShowMoreCellRendererParams = ICellRendererParams<ReportRow, string> & {
+  onExpandedHeightChange: (rowId: number, height: number | null) => void;
+};
+
 function ShowMoreCellRenderer({
+  data,
+  eGridCell,
+  onExpandedHeightChange,
   value,
-}: ICellRendererParams<ReportRow, string>) {
+}: ShowMoreCellRendererParams) {
   const { language } = useLanguage();
   const t = reportsCopy[language];
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
+  const rendererRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const description = value?.trim() ?? "";
 
@@ -315,10 +326,45 @@ function ShowMoreCellRenderer({
     return () => observer.disconnect();
   }, [description, expanded]);
 
+  useLayoutEffect(() => {
+    const renderer = rendererRef.current;
+    const rowId = data?.id;
+    if (!renderer || rowId === undefined || !expanded) {
+      if (rowId !== undefined) onExpandedHeightChange(rowId, null);
+      return;
+    }
+
+    const measureHeight = () => {
+      const cellStyle = window.getComputedStyle(eGridCell);
+      const verticalChrome =
+        Number.parseFloat(cellStyle.paddingTop) +
+        Number.parseFloat(cellStyle.paddingBottom) +
+        Number.parseFloat(cellStyle.borderTopWidth) +
+        Number.parseFloat(cellStyle.borderBottomWidth);
+
+      onExpandedHeightChange(
+        rowId,
+        Math.ceil(renderer.getBoundingClientRect().height + verticalChrome),
+      );
+    };
+
+    measureHeight();
+    const observer = new ResizeObserver(measureHeight);
+    observer.observe(renderer);
+
+    return () => {
+      observer.disconnect();
+      onExpandedHeightChange(rowId, null);
+    };
+  }, [data?.id, eGridCell, expanded, onExpandedHeightChange]);
+
   if (!description) return <span>---</span>;
 
   return (
-    <div className={`description-renderer${expanded ? " expanded" : ""}`}>
+    <div
+      ref={rendererRef}
+      className={`description-renderer${expanded ? " expanded" : ""}`}
+    >
       <span ref={textRef}>{description}</span>
       {canExpand && (
         <button
@@ -550,6 +596,27 @@ export function ReportsTable() {
   const [pageSize, setPageSize] = useState(5);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  // The Infinite Row Model supports one row height, so it must fit the
+  // tallest description that is currently expanded.
+  const expandedDescriptionHeights = useRef(new Map<number, number>());
+  const [rowHeight, setRowHeight] = useState(DEFAULT_REPORT_ROW_HEIGHT);
+
+  const updateExpandedDescriptionHeight = useCallback(
+    (rowId: number, height: number | null) => {
+      const heights = expandedDescriptionHeights.current;
+      if (height === null) heights.delete(rowId);
+      else heights.set(rowId, height);
+
+      const nextRowHeight = Math.max(
+        DEFAULT_REPORT_ROW_HEIGHT,
+        ...heights.values(),
+      );
+      setRowHeight((current) =>
+        current === nextRowHeight ? current : nextRowHeight,
+      );
+    },
+    [],
+  );
 
   const dataSource = useMemo<IDatasource>(() => {
     const controllers = new Set<AbortController>();
@@ -667,9 +734,11 @@ export function ReportsTable() {
         headerName: t.description,
         minWidth: 210,
         flex: 1.35,
-        autoHeight: true,
         cellClass: "description-cell",
         cellRenderer: ShowMoreCellRenderer,
+        cellRendererParams: {
+          onExpandedHeightChange: updateExpandedDescriptionHeight,
+        },
       },
       {
         colId: "showDate",
@@ -723,7 +792,7 @@ export function ReportsTable() {
         cellRenderer: OperationRenderer,
       },
     ],
-    [dateFormatter, dateTimeFormatter, t],
+    [dateFormatter, dateTimeFormatter, t, updateExpandedDescriptionHeight],
   );
 
   const defaultColDef = useMemo<ColDef<ReportRow>>(
@@ -795,7 +864,7 @@ export function ReportsTable() {
                 current === nextPageSize ? current : nextPageSize,
               );
             }}
-            rowHeight={54}
+            rowHeight={rowHeight}
             headerHeight={48}
             floatingFiltersHeight={45}
             theme={themeQuartz}
